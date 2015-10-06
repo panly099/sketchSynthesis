@@ -1,0 +1,29 @@
+<annotation>
+	<size>
+		<width>500</width>
+		<height>394</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>duck</name>
+		<truncated>0</truncated>
+		<occluded>0</occluded>
+		<difficult>0</difficult>
+		<pose>Left</pose>
+		<bndbox>
+			<xmin>23</xmin>
+			<ymin>7</ymin>
+			<xmax>479</xmax>
+			<ymax>383</ymax>
+		</bndbox>
+		<part>
+			<truncated>0</truncated>
+			<occluded>0</occluded>
+			<difficult>0</difficult>
+			<pose>Unspecified</pose>
+			<bndbox>
+			</bndbox>
+		</part>
+	</object>
+</annotation>

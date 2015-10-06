@@ -1,0 +1,29 @@
+<annotation>
+	<size>
+		<width>500</width>
+		<height>327</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>horse</name>
+		<truncated>0</truncated>
+		<occluded>0</occluded>
+		<difficult>0</difficult>
+		<pose>Left</pose>
+		<bndbox>
+			<xmin>115</xmin>
+			<ymin>84</ymin>
+			<xmax>437</xmax>
+			<ymax>286</ymax>
+		</bndbox>
+		<part>
+			<truncated>0</truncated>
+			<occluded>0</occluded>
+			<difficult>0</difficult>
+			<pose>Unspecified</pose>
+			<bndbox>
+			</bndbox>
+		</part>
+	</object>
+</annotation>

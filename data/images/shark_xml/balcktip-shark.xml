@@ -1,0 +1,29 @@
+<annotation>
+	<size>
+		<width>527</width>
+		<height>382</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>shark</name>
+		<truncated>0</truncated>
+		<occluded>0</occluded>
+		<difficult>0</difficult>
+		<pose>Left</pose>
+		<bndbox>
+			<xmin>9</xmin>
+			<ymin>8</ymin>
+			<xmax>527</xmax>
+			<ymax>279</ymax>
+		</bndbox>
+		<part>
+			<truncated>0</truncated>
+			<occluded>0</occluded>
+			<difficult>0</difficult>
+			<pose>Unspecified</pose>
+			<bndbox>
+			</bndbox>
+		</part>
+	</object>
+</annotation>

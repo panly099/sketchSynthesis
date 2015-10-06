@@ -1,0 +1,29 @@
+<annotation>
+	<size>
+		<width>1001</width>
+		<height>751</height>
+		<depth>3</depth>
+	</size>
+	<segmented>0</segmented>
+	<object>
+		<name>bicycle</name>
+		<truncated>0</truncated>
+		<occluded>0</occluded>
+		<difficult>0</difficult>
+		<pose>Right</pose>
+		<bndbox>
+			<xmin>1</xmin>
+			<ymin>1</ymin>
+			<xmax>1001</xmax>
+			<ymax>733</ymax>
+		</bndbox>
+		<part>
+			<truncated>0</truncated>
+			<occluded>0</occluded>
+			<difficult>0</difficult>
+			<pose>Unspecified</pose>
+			<bndbox>
+			</bndbox>
+		</part>
+	</object>
+</annotation>

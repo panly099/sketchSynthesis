@@ -12,8 +12,7 @@ libs : the dependant 3rd-party libraries.
 
 GUIs : this folder includes 3 apps :
        * [synGUI] the GUI for synthesizing a sketch after giving an input image.
-       * [AnnoGUI] the GUI for annotating object bounding boxes for testing. It can
-                   also be used for part-based model supervision.
+       * [AnnoGUI] the GUI for annotating object bounding boxes for testing. It can also be used for part-based model supervision.
        * [UserStudyGUI] the GUI we use to do the perceptual studies in the paper.
          
 results : the pre-trained DSMs and synthesized sketches, organized by category.

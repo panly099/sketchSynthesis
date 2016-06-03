@@ -13,7 +13,8 @@ paramSettingScript;
 %    'Artistic faceA30', 'Artistic faceE30',...
 %    };
 
-for cateId = 1 : length(cates)
+% for cateId = 1 : length(cates)
+for cateId = 6 : 6
     cate = cates{cateId};
     catePath= [DSMRoot,'/results/',cate];
     load([catePath, '/cateInfo/strokeModel_final.mat']);
@@ -23,11 +24,11 @@ for cateId = 1 : length(cates)
     end
     mkdir(allSynPath);
         
-    for iter = 1 : 5
+    for iter = 1 : 3
         itSynPath = [allSynPath, '/syntheses_it', num2str(iter)];
         mkdir(itSynPath);
         
-        if  strfind(cate,'face') == 0
+        if  isempty(strfind(cate,'face'))
             imgPath = [DSMRoot, '/data/images/', cate, '_img'];
             xmlPath = [DSMRoot, '/data/images/', cate, '_xml'];
         else

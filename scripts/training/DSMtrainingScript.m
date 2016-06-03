@@ -84,6 +84,10 @@ minSize = sortedStrokeLength(ceil(length(sortedStrokeLength)/2));
 midSize = ceil(mean(sortedStrokeLength));
 maxSize = sortedStrokeLength(ceil(length(sortedStrokeLength) * overSizePortion(cateId)));
 
+% for different length prior
+maxSize = maxSize * 0.5; % -50%
+% maxSize = maxSize * 1.5; % +50%
+
 oneThird = sortedStrokeLength(ceil(length(sortedStrokeLength)/3));
 twoThirds = sortedStrokeLength(ceil(2*length(sortedStrokeLength)/3));
 
@@ -108,7 +112,7 @@ strokeLabel = {};
 lastVar = Inf;
 numExemplars = ceil(numAll/3);
 varNum = varNums(cateId);
-strokeStatisticsScript;
+% strokeStatisticsScript;
 
 % poolobj = parpool(4);
 while ~fConverge

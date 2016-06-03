@@ -84,10 +84,6 @@ minSize = sortedStrokeLength(ceil(length(sortedStrokeLength)/2));
 midSize = ceil(mean(sortedStrokeLength));
 maxSize = sortedStrokeLength(ceil(length(sortedStrokeLength) * overSizePortion(cateId)));
 
-% for different length prior
-maxSize = maxSize * 0.5; % -50%
-% maxSize = maxSize * 1.5; % +50%
-
 oneThird = sortedStrokeLength(ceil(length(sortedStrokeLength)/3));
 twoThirds = sortedStrokeLength(ceil(2*length(sortedStrokeLength)/3));
 
@@ -112,9 +108,9 @@ strokeLabel = {};
 lastVar = Inf;
 numExemplars = ceil(numAll/3);
 varNum = varNums(cateId);
-% strokeStatisticsScript;
+strokeStatisticsScript;
 
-% poolobj = parpool(4);
+poolobj = parpool(4);
 while ~fConverge
     iteration = iteration + 1;
     %% stroke grouping
@@ -190,7 +186,7 @@ if display == 1
     fOutputGroup =0;
     modelVisScript;
 end
-% delete(poolobj);
+delete(poolobj);
 
 %% Output the grouping if it is not done during training
 % iteration = iteration + 1;

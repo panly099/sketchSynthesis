@@ -13,8 +13,7 @@ paramSettingScript;
 %    'Artistic faceA30', 'Artistic faceE30',...
 %    };
 
-% for cateId = 1 : length(cates)
-for cateId = 6 : 6
+for cateId = 1 : length(cates)
     cate = cates{cateId};
     catePath= [DSMRoot,'/results/',cate];
     load([catePath, '/cateInfo/strokeModel_final.mat']);

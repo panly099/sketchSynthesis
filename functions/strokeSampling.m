@@ -1,4 +1,4 @@
-function [ configurations ] = strokeSampling(sample, strokeModel, searchRatio, baseScale, baseAspect, threshold, numConf)
+function [ configurations ] = strokeSampling(sample, strokeModel, searchRatio, baseScale, baseAspect, threshold)
 % This function samples stroke model configurations on the given input sketch or edge
 % map sample via a dynamic programming process.
 %   Input :
@@ -20,6 +20,7 @@ if nargin < 6
     threshold = 0.3;
 end
 
+numConf = 5;
 
 clusterBbox = strokeModel.clusterBbox;
 repStrokes = strokeModel.repStrokes;

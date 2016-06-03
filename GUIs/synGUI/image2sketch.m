@@ -216,25 +216,23 @@ if flag
     synthesized2 = flip(synthesized2,2);
 end
 
-figure;
-subplot(1,4,1);
-imshow(croppedImg);
-title('Image');
-
-subplot(1,4,2);
-imshow(~edgeSecond);
-title('Edge map');
-
-subplot(1,4,3);
-imshow(~synthesized1);
-title('Synthesis');
-
-subplot(1,4,4);
-imshow(~synthesized2);
-title('Refinement');
+% figure;
+% subplot(1,4,1);
+% imshow(croppedImg);
+% title('Image');
 % 
-% path = ['/homes/yl303/Dropbox/Projects/acmsiggraph/images/',cate,'Syn1.pdf'];
-% export_fig(path,'-pdf','-transparent');
+% subplot(1,4,2);
+% imshow(~edgeSecond);
+% title('Edge map');
+% 
+% subplot(1,4,3);
+% imshow(~synthesized1);
+% title('Synthesis');
+% 
+% subplot(1,4,4);
+imshow(~synthesized2);
+% title('Refinement');
+% 
 
 % --- Executes on button press in radiobutton1.
 function radiobutton1_Callback(hObject, eventdata, handles)

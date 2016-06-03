@@ -2,7 +2,7 @@
 % This script configures the necessary addpaths. Please change the DSMRoot
 % to your local installation folder.
 %--------------------------------------------------------------------------
-DSMRoot = '/homes/yl303/Documents/MATLAB/synthesis-release';
+DSMRoot = '../../';
 
 addpath(genpath([DSMRoot, '/functions']));
 addpath(genpath([DSMRoot,'/libs']));

@@ -122,7 +122,11 @@ while ~fConverge
         load([cateInfoPath, '/strokeInfo_it',num2str(iteration),'.mat']);
     end
     
+    breakFlag = 0;
     convergenceScript;
+    if breakFlag == 1
+        break
+    end
     %% element learning
     if ~exist([cateInfoPath, '/elements_it',num2str(iteration),'.mat'], 'file')
         perSketchStrokeNum = perSketchStrokeNum(~cellfun('isempty',perSketchStrokeNum));

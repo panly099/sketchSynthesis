@@ -73,7 +73,7 @@ for cateId = 1 : length(cates)
                     end
                     I = imresize(I, [strokeModel.avgHeight, strokeModel.avgWidth]);
                     
-                    if  strfind(cate,'face') == 0 
+                    if  isempty(strfind(cate,'face')) 
                         [edgeSoft] = pbCanny(double(I)/255);
                         edgeSecond = edgeSoft > 0.3;
                         se = strel('disk',2,8);
@@ -105,8 +105,8 @@ for cateId = 1 : length(cates)
                     
                     imwrite(colorI, [synFileFolder, '/image.png']);
                     imwrite(~edgeSecond, [synFileFolder, '/edgeMap.png']);
-                    imwrite(uint8(255-synthesized1), [synFileFolder, '/synthesis.png'], 'png');
-                    imwrite(uint8(255-synthesized2), [synFileFolder, '/refinement.png'], 'png');
+                    imwrite(~synthesized1, [synFileFolder, '/synthesis.png'], 'png');
+                    imwrite(~synthesized2, [synFileFolder, '/refinement.png'], 'png');
                     
                 end
             end

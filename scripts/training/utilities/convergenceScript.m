@@ -45,7 +45,7 @@ end
 if variance < lastVar
     lastVar = variance;
 elseif iteration > 2
-    break;
+    breakFlag = 1;
 else
     lastVar = variance;
 end

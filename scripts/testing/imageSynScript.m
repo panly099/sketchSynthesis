@@ -84,7 +84,7 @@ for cateId = 1 : length(cates)
                     end
 %                     figure;imshow(~edgeSecond);
                     
-                    configuration = strokeSampling(edgeSecond, strokeModel,detScale(cateId), 1.1, 1.1, 0.7);
+                    configuration = strokeSampling(edgeSecond, strokeModel,detScale(cateId), 1.1, 1.1, 0.7, 5);
                     detection = sketchDetect(edgeSecond, strokeModel, configuration, detScale(cateId), 0.7, 0.4);
                     
                     synthesized1 = zeros(strokeModel.avgHeight, strokeModel.avgWidth);

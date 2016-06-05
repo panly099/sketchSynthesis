@@ -1,4 +1,4 @@
-function [ configurations ] = strokeSampling(sample, strokeModel, searchRatio, baseScale, baseAspect, threshold)
+function [ configurations ] = strokeSampling(sample, strokeModel, searchRatio, baseScale, baseAspect, threshold, numConf)
 % This function samples stroke model configurations on the given input sketch or edge
 % map sample via a dynamic programming process.
 %   Input :
@@ -9,6 +9,7 @@ function [ configurations ] = strokeSampling(sample, strokeModel, searchRatio, b
 %       baseAspect : the basic aspect ratio for the template in chamfer
 %       matching.
 %       searchRatio : the search ratio of the original stroke bounding box.
+%       numConf : the number of configurations wanted.
 %   Output :
 %       configuration : the sampled configuration of the object.
 %   Author :
@@ -19,8 +20,6 @@ function [ configurations ] = strokeSampling(sample, strokeModel, searchRatio, b
 if nargin < 6
     threshold = 0.3;
 end
-
-numConf = 5;
 
 clusterBbox = strokeModel.clusterBbox;
 repStrokes = strokeModel.repStrokes;

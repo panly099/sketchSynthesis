@@ -112,7 +112,7 @@ if display == 1
     strokeStatisticsScript;
 end
 
-poolobj = parpool(4);
+poolobj = parpool;
 while ~fConverge
     iteration = iteration + 1;
     %% stroke grouping

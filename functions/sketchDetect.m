@@ -13,7 +13,7 @@ function [ detection ] = sketchDetect(sample, strokeModel, configurations, searc
 %   Author :
 %       panly099@gmail.com
 %   Version :
-%       1.0 24/03/15
+%       1.1 07/06/2016
 
 if nargin < 5
     threshold = 0.5;
@@ -75,7 +75,7 @@ for a = 1 : numConf
         [strokeMatched, cost] = chamferLocate(img, strokeImg, baseScale, baseAspect, threshold);
         
         
-%                 figure;imshow(~strokeImg);figure;imshow(~img);
+        %                 figure;imshow(~strokeImg);figure;imshow(~img);
         if size(strokeMatched,1) > 1000
             stop = 1;
         end
@@ -87,7 +87,7 @@ for a = 1 : numConf
                 cost(s) = 1;
             end
             strokeCandidates{j}(s,:) = [{tmpSample}, cost(s)];
-%                          figure;imshow(~strokeMatched{s});
+            %                          figure;imshow(~strokeMatched{s});
             
         end
         
@@ -96,14 +96,15 @@ for a = 1 : numConf
     
     %% energy minimization by dynamic programming
     % backward
+    fprintf('Backward propogation\n');
     for i = length(mst) : -1 : 2
         fprintf('Scanning MST layer: %d\n', i);
         curLayer = mst{i};
         for j = 1 : length(curLayer)
-            parents = [];
+%             parents = [];
             curEdge = curLayer{j};
             curParent = curEdge{1}(2);
-            parents = [parents curParent];
+%             parents = [parents curParent];
             curChild = curEdge{1}(1);
             curParam = curEdge{2};
             
@@ -126,7 +127,7 @@ for a = 1 : numConf
                     for gc = 3 : size(curChildCandidates,2)
                         curCost = curCost + curChildCandidates{c,gc}(2);
                     end
-
+                    
                     childCosts(c) = curCost;
                 end
                 [minCost, minIdx] = min(childCosts);
@@ -136,58 +137,85 @@ for a = 1 : numConf
                 strokeCandidates{curParent}{p, curParentChildIdx} = [curChild, minCost, minIdx];
             end
             
-            % adding overlapping penalty
-            parents = unique(parents);
-            for u = 1 : length(parents)
-                curParent = parents(u);
-                for p = 1 : size(strokeCandidates{curParent}, 1)
-                    curParentImg = strokeCandidates{curParent}{p,1};
-                    overlapCost = 0;
-                    for c = 3 : size(strokeCandidates{curParent}, 2)
-                        curChild = strokeCandidates{curParent}{p,c}(1);
-                        curChildIdx = strokeCandidates{curParent}{p,c}(3);
-                        curChildImg = strokeCandidates{curChild}{curChildIdx,1};
-                        curOverlap = curParentImg.*curChildImg;
-                        overlapCost = overlapCost + sum(curOverlap(:)) * overlapWeight;
-                    end
-                    strokeCandidates{curParent}{p,2} = strokeCandidates{curParent}{p,2} + overlapCost;
-                end
-            end
+%             % adding overlapping penalty
+%             parents = unique(parents);
+%             for u = 1 : length(parents)
+%                 curParent = parents(u);
+%                 for p = 1 : size(strokeCandidates{curParent}, 1)
+%                     curParentImg = strokeCandidates{curParent}{p,1};
+%                     overlapCost = 0;
+%                     for c = 3 : size(strokeCandidates{curParent}, 2)
+%                         curChild = strokeCandidates{curParent}{p,c}(1);
+%                         curChildIdx = strokeCandidates{curParent}{p,c}(3);
+%                         curChildImg = strokeCandidates{curChild}{curChildIdx,1};
+%                         curOverlap = curParentImg.*curChildImg;
+%                         overlapCost = overlapCost + sum(curOverlap(:)) * overlapWeight;
+%                     end
+%                     strokeCandidates{curParent}{p,2} = strokeCandidates{curParent}{p,2} + overlapCost;
+%                 end
+%             end
         end
     end
     
     % forward
+    fprintf('forward propogation\n');
+    fprintf('Scanning MST layer: %d\n', 1);
     detection = cell(1, numCluster);
     root = mst{1};
-    rootCandidates = strokeCandidates{root};
     
-    minCost = Inf;
-    for i = 1 : size(rootCandidates,1)
-        cost = rootCandidates{i,2};
-        for j = 3 : size(rootCandidates,2)
-            cost = cost + rootCandidates{i,j}(2);
+    rootCosts = [];
+    for i = 1 : size(strokeCandidates{root},1)
+        cost = strokeCandidates{root}{i,2};
+        for j = 3 : size(strokeCandidates{root},2)
+            cost = cost + strokeCandidates{root}{i,j}(2);
         end
-        if cost < minCost
-            minCost = cost;
-            minIdx = i;
-        end
+        rootCosts(end+1) = cost;
     end
+    [~,rootSelected] = min(rootCosts);
+    minCost = rootCosts(rootSelected);
+
+    detection{root} = strokeCandidates{root}{rootSelected, 1};
     
-    queChosenCandidates = [root ; minIdx];
-    while ~isempty(queChosenCandidates)
-        curChosen = queChosenCandidates(:,1);
-        queChosenCandidates(:,1) = [];
+    for i = 2 : length(mst)
+        fprintf('Scanning MST layer: %d\n', i);
+        curLayer = mst{i};
         
-        detection{curChosen(1)} = strokeCandidates{curChosen(1)}{curChosen(2),1};
-        
-        for i = 3 : size(strokeCandidates{curChosen(1)},2)
-            curChildChosen = strokeCandidates{curChosen(1)}{curChosen(2),i};
-            queChosenCandidates(:,end+1) = [curChildChosen(1);curChildChosen(3)];
+        for j = 1 : length(curLayer)
+            curEdge = curLayer{j};
+            curParent = curEdge{1}(2);
+            curChild = curEdge{1}(1);
+            curParam = curEdge{2};
+            
+            curParentCandidate = detection{curParent};
+            curChildCandidates = strokeCandidates{curChild};
+            
+            tmpBbox = getBoundingBox(curParentCandidate, 0);
+            curParentCenter = ceil([(tmpBbox(2)+tmpBbox(4))/2, (tmpBbox(1)+tmpBbox(3))/2]);
+            
+            childCosts = ones(1, size(curChildCandidates, 1))*Inf;
+            for c = 1 : size(curChildCandidates, 1)
+                tmpBbox = getBoundingBox(curChildCandidates{c,1},0);
+                curChildCenter = ceil([(tmpBbox(2)+tmpBbox(4))/2, (tmpBbox(1)+tmpBbox(3))/2]);
+                
+                geoNorm = 1/40;
+                curCost = appGeoWeight * curChildCandidates{c,2} - (1-appGeoWeight) * geoNorm * log(mvnpdf(curChildCenter-curParentCenter, ...
+                    curParam{2},curParam{3}));
+                
+                for gc = 3 : size(curChildCandidates,2)
+                    curCost = curCost + curChildCandidates{c,gc}(2);
+                end
+                
+                childCosts(c) = curCost;
+            end
+            [~, minId] = min(childCosts);
+            detection{curChild} = curChildCandidates{minId,1};
         end
     end
 
+    
     detections{a} = detection;
     energy(a) = minCost;
+    
 end
 [~,minIdx] = min(energy);
 detection = detections{minIdx};
@@ -201,6 +229,6 @@ detection = detections{minIdx};
 % end
 % figure;imshow(~sample);
 % figure;imshow(~synthesized);
-    
+
 end
 

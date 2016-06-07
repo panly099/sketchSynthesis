@@ -15,7 +15,7 @@ function [ configurations ] = strokeSampling(sample, strokeModel, searchRatio, b
 %   Author :
 %       panly099@gmail.com
 %   Version :
-%       1.0 24/03/15
+%       1.1 07/06/16
 
 if nargin < 6
     threshold = 0.3;
@@ -42,8 +42,8 @@ for i = 1 : numCluster
         for p = 1 : size(curRep, 1)
             strokeImg(curRep(p,1), curRep(p,2))=1;
         end
-%         figure; imshow(strokeImg);
-%         close all;
+        %         figure; imshow(strokeImg);
+        %         close all;
         strBbox = getBoundingBox(strokeImg,0);
         strokeImg = strokeImg(strBbox(2):strBbox(4), strBbox(1):strBbox(3));
         
@@ -69,20 +69,20 @@ for i = 1 : numCluster
         img = sample(searchRegion(2):searchRegion(4), searchRegion(1):searchRegion(3));
         % fdcm anchoring
         [strokeMatched, curCost] = chamferLocate(img, strokeImg, baseScale, baseAspect, threshold);
-
         
-%         figure;imshow(~strokeImg);figure;imshow(~img);
+        
+        %         figure;imshow(~strokeImg);figure;imshow(~img);
         for s = 1 : min(3, length(curCost))
             tmpSample = zeros(height, width);
             tmpSample(searchRegion(2):searchRegion(4), searchRegion(1):searchRegion(3)) = strokeMatched{s};
             
-            if curCost(s) <= 0 
+            if curCost(s) <= 0
                 curCost(s) = 1;
             end
-
+            
             strokeCandidates{i,j}(s,:) = [{tmpSample}, exp(-curCost(s))];
-%              figure;imshow(~strokeMatched{s});
-
+            %              figure;imshow(~strokeMatched{s});
+            
         end
         
         %         figure;imshow(sample);
@@ -96,7 +96,8 @@ end
 strokeCandidates = newStrokeCandidates;
 %% sampling from the posterior by dynamic programming
 % backward
-for i = length(mst) : -1 : 2 
+fprintf('Backward propogation\n');
+for i = length(mst) : -1 : 2
     fprintf('Scanning MST layer: %d\n', i);
     curLayer = mst{i};
     for j = 1 : length(curLayer)
@@ -117,7 +118,7 @@ for i = length(mst) : -1 : 2
             for c = 1 : size(curChildCandidates, 1)
                 tmpBbox = getBoundingBox(curChildCandidates{c,1},0);
                 curChildCenter = ceil([(tmpBbox(2)+tmpBbox(4))/2, (tmpBbox(1)+tmpBbox(3))/2]);
-
+                
                 tmpProb = curChildCandidates{c,2} * mvnpdf(curChildCenter-curParentCenter, curParam{2},curParam{3});
                 
                 for gc = 3 : size(curChildCandidates,2)
@@ -132,62 +133,69 @@ for i = length(mst) : -1 : 2
 end
 
 % forward
+fprintf('forward propogation\n');
+
 root = mst{1};
 rootProbs = [];
 for i = 1 : size(strokeCandidates{root},1)
-        curProb = strokeCandidates{root}{i,2};
-        for j = 3 : size(strokeCandidates{root},2)
-            curProb = curProb * strokeCandidates{root}{i,j}(2);
-        end
-        rootProbs(end+1) = curProb;
+    curProb = strokeCandidates{root}{i,2};
+    for j = 3 : size(strokeCandidates{root},2)
+        curProb = curProb * strokeCandidates{root}{i,j}(2);
+    end
+    rootProbs(end+1) = curProb;
 end
 [~,rootSelected] = sort(rootProbs,'descend');
 numConf = min(numConf, length(rootProbs));
 configurations = cell(1,numConf);
 
-for c = 1 : numConf
+for f = 1 : numConf
     configuration = cell(1, numCluster);
+    configuration{root} = strokeCandidates{root}{rootSelected(f), 1};
     
-    queChosenCandidates = root;
-    while ~isempty(queChosenCandidates)
-        curChosen = queChosenCandidates(:,1);
-        queChosenCandidates(:,1) = [];
+    for i = 2 : length(mst)
+        fprintf('Scanning MST layer: %d\n', i);
+        curLayer = mst{i};
         
-        if curChosen == root
-            maxIdx = rootSelected(c);
-        else
-            maxProb = 0;
-            for i = 1 : size(strokeCandidates{curChosen},1)
-                curProb = strokeCandidates{curChosen}{i,2};
-                for j = 3 : size(strokeCandidates{curChosen},2)
-                    curProb = curProb * strokeCandidates{curChosen}{i,j}(2);
-                end
+        for j = 1 : length(curLayer)
+            curEdge = curLayer{j};
+            curParent = curEdge{1}(2);
+            curChild = curEdge{1}(1);
+            curParam = curEdge{2};
+            
+            curParentCandidate = configuration{curParent};
+            curChildCandidates = strokeCandidates{curChild};
+            
+            tmpBbox = getBoundingBox(curParentCandidate, 0);
+            curParentCenter = ceil([(tmpBbox(2)+tmpBbox(4))/2, (tmpBbox(1)+tmpBbox(3))/2]);
+            
+            allProb = zeros(1, size(curChildCandidates, 1));
+            for c = 1 : size(curChildCandidates, 1)
+                tmpBbox = getBoundingBox(curChildCandidates{c,1},0);
+                curChildCenter = ceil([(tmpBbox(2)+tmpBbox(4))/2, (tmpBbox(1)+tmpBbox(3))/2]);
                 
-                if curProb >= maxProb
-                    maxProb = curProb;
-                    maxIdx = i;
+                tmpProb = curChildCandidates{c,2} * mvnpdf(curChildCenter-curParentCenter, curParam{2},curParam{3});
+                
+                for gc = 3 : size(curChildCandidates,2)
+                    tmpProb = tmpProb * curChildCandidates{c,gc}(2);
                 end
+                allProb(c) = tmpProb;
             end
-        end
-        
-        configuration{curChosen} = strokeCandidates{curChosen}{maxIdx,1};
-        
-        for i = 3 : size(strokeCandidates{curChosen},2)
-            curChildChosen = strokeCandidates{curChosen}{maxIdx,i};
-            queChosenCandidates(end+1) = curChildChosen(1);
+            [~, maxId] = max(allProb);
+            configuration{curChild} = curChildCandidates{maxId,1};
         end
     end
-    configurations{c} = configuration;
+    configurations{f} = configuration;
     
-    % visualize the detection
-%     synthesized = zeros(height, width);
-%     for i = 1 : length(configuration)
-%         if sum(configuration{i}(:)) > 1
-%             synthesized = synthesized + configuration{i};
-%         end
-%     end
-%     figure;imshow(~sample);
-%     figure;imshow(~synthesized);
+    %         % visualize the sampling
+    %         synthesized = zeros(height, width);
+    %         for i = 1 : length(configuration)
+    %             if sum(configuration{i}(:)) > 1
+    %                 synthesized = synthesized + configuration{i};
+    %             end
+    %         end
+    %         figure;imshow(~sample);
+    %         figure;imshow(~synthesized);
 end
+
 end
 

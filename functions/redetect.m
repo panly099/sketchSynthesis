@@ -146,7 +146,6 @@ function [strokeLabel, strokeFinal] = detectionAssign(strokeImg, detection, stro
 %       yi.li@qmul.ac.uk
 %    Version :
 %       1.0 24/03/15
-addpath('/homes/yl303/Documents/MATLAB/synthesis/libs/pathFinder');
 fprintf('.');
 
 expectedOccupyRate = 0.5;

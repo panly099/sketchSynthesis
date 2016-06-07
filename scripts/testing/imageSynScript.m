@@ -1,6 +1,9 @@
 %--------------------------------------------------------------------------
 % This script synthesizes sketches for given images
 %--------------------------------------------------------------------------
+clear;
+close all;
+
 addpath('../');
 configureScript;
 

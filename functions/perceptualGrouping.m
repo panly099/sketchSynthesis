@@ -17,7 +17,7 @@ function [ lineGroups ] = perceptualGrouping( lines, avgWidth, avgHeight, maxSiz
 %       panly099@gmail.com
 %   Version :
 %       1.0 27/02/15
-addpath('/homes/yl303/Documents/MATLAB/Sketchlet/Functions/facilities');
+
 errorMax = 1;
 %% construct the edge graph (pairwise relationships between edges)
 numLine = length(lines);

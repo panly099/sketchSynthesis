@@ -108,7 +108,9 @@ strokeLabel = {};
 lastVar = Inf;
 numExemplars = ceil(numAll/3);
 varNum = varNums(cateId);
-strokeStatisticsScript;
+if display == 1
+    strokeStatisticsScript;
+end
 
 poolobj = parpool(4);
 while ~fConverge

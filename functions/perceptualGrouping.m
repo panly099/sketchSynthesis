@@ -199,7 +199,6 @@ if debug == 1;
 end
 
 %% the proximity error
-addpath('/homes/yl303/Documents/MATLAB/synthesis/libs/ModHausdorffDist');
 epsilon1 = sqrt((avgWidth * avgHeight)/nGroups)/2;
 
 
@@ -231,7 +230,6 @@ error = error + Es * weights(3);
 
 
 %% the similarity bonus
-addpath('/homes/yl303/Documents/MATLAB/Sketchlet/Libs/sc_demo');
 sigma = 15;
 Bs = 0;
 eps_dum = 1;

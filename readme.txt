@@ -15,7 +15,7 @@ GUIs : this folder includes 3 apps :
        * [AnnoGUI] the GUI for annotating object bounding boxes for testing. It can also be used for part-based model supervision.
        * [UserStudyGUI] the GUI we use to do the perceptual studies in the paper.
          
-results : the pre-trained DSMs and synthesized sketches, organized by category. They should be downloaded from https://github.com/panly099/sketchSynthesisResults
+results : the pre-trained DSMs and synthesized sketches, organized by category. They should be downloaded from https://github.com/panly099/sketchSynthesisResults. And please make the "results" folder by yourself to accommodate them.
 ------------------------------------------------------------------------------------
 
 3. How to start?

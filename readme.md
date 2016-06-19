@@ -1,4 +1,4 @@
-#1. This is the linux implementation of deformable stroke model (DSM) and its relevent tools.
+1. This is the linux implementation of deformable stroke model (DSM) and its relevent tools.
 
 2. The folder structure :
 ------------------------------------------------------------------------------------

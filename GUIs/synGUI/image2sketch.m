@@ -58,7 +58,7 @@ handles.output = hObject;
 % Update handles structure
 guidata(hObject, handles);
 set(handles.pushbutton_Bbox, 'Enable', 'off');
-addpath('../../scripts');
+addpath(genpath('../../scripts'));
 configureScript;
 % UIWAIT makes image2sketch wait for user response (see UIRESUME)
 % uiwait(handles.figure1);
